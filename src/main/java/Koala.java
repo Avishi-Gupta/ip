@@ -43,6 +43,40 @@ public class Koala {
                     continue;
                 }
 
+                if (input.startsWith("deadline ")) {
+                    String[] parts = input.split(" /by ");
+                    if (parts.length == 2) {
+                        tasks[msgCount] = new Deadline(parts[0].substring(9), parts[1]);
+                        msgCount++;
+                        System.out.println("Got it. I've added this task: " + tasks[msgCount - 1]);
+                    } else {
+                        System.out.println("Invalid deadline format.");
+                    }
+                    continue;
+                }
+
+                if (input.startsWith("event ")) {
+                    String[] parts = input.split(" /from ");
+                    if (parts.length == 2) {
+                        String[] times = parts[1].split(" /to ");
+                        if (times.length == 2) {
+                            tasks[msgCount] = new Event(parts[0].substring(6), times[0], times[1]);
+                            msgCount++;
+                            System.out.println("Got it. I've added this task: " + tasks[msgCount - 1]);
+                        } else {
+                            System.out.println("Invalid event format.");
+                        }
+                    }
+                    continue;
+                }
+
+                if (input.startsWith("todo ")) {
+                    tasks[msgCount] = new Todo(input.substring(5));
+                    msgCount++;
+                    System.out.println("Got it. I've added this task: " + tasks[msgCount - 1]);
+                    continue;
+                }
+
                 tasks[msgCount] = new Task(input);
                 msgCount++;
                 System.out.println("added: " + input);
