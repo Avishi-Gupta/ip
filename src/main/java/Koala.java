@@ -44,6 +44,10 @@ public class Koala {
                 }
 
                 if (input.startsWith("deadline ")) {
+                    if (input.length() <= 9) {
+                        System.out.println("Invalid deadline description.");
+                        continue;
+                    }
                     String[] parts = input.split(" /by ");
                     if (parts.length == 2) {
                         tasks[msgCount] = new Deadline(parts[0].substring(9), parts[1]);
@@ -56,6 +60,10 @@ public class Koala {
                 }
 
                 if (input.startsWith("event ")) {
+                    if (input.length() <= 6) {
+                        System.out.println("Invalid event description.");
+                        continue;
+                    }
                     String[] parts = input.split(" /from ");
                     if (parts.length == 2) {
                         String[] times = parts[1].split(" /to ");
@@ -71,14 +79,17 @@ public class Koala {
                 }
 
                 if (input.startsWith("todo ")) {
+                    if (input.length() <= 5) {
+                        System.out.println("Invalid todo description.");
+                        continue;
+                    }
                     tasks[msgCount] = new Todo(input.substring(5));
                     msgCount++;
                     System.out.println("Got it. I've added this task: " + tasks[msgCount - 1]);
-                } 
-            
-                    // tasks[msgCount] = new Task(input);
-                    // msgCount++;
-                    // System.out.println("added: " + input);
+                    continue;
+                }
+
+                System.out.println("I'm sorry, but I don't know what that means.");
             }
         }
     }
