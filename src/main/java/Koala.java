@@ -74,12 +74,11 @@ public class Koala {
                     tasks[msgCount] = new Todo(input.substring(5));
                     msgCount++;
                     System.out.println("Got it. I've added this task: " + tasks[msgCount - 1]);
-                    continue;
-                }
-
-                tasks[msgCount] = new Task(input);
-                msgCount++;
-                System.out.println("added: " + input);
+                } 
+            
+                    // tasks[msgCount] = new Task(input);
+                    // msgCount++;
+                    // System.out.println("added: " + input);
             }
         }
     }
