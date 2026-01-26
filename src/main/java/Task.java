@@ -2,7 +2,10 @@ public class Task {
     private final String descript;
     private boolean isComplete;
 
-    public Task (String descript) {
+    public Task (String descript) throws KoalaException {
+        if (descript == null || descript.trim().isEmpty()) {
+            throw new KoalaException("Task description cannot be empty.");
+        }
         this.descript = descript;
         this.isComplete = false;
     }
@@ -17,6 +20,9 @@ public class Task {
 
     public String getDescript() {
         return descript;
+    }
+
+    public void delete() {
     }
 
     @Override

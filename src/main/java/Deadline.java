@@ -2,7 +2,7 @@ public class Deadline extends Task {
 
     protected String due;
 
-    public Deadline(String description, String due) {
+    public Deadline(String description, String due) throws KoalaException {
         super(description);
         this.due = due;
     }
