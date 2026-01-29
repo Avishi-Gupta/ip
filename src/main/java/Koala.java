@@ -1,13 +1,23 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Koala {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws KoalaException, IOException {
         try (Scanner scanner = new Scanner(System.in)) {
-            ArrayList<Task> tasks = new ArrayList<>();
+            ArrayList<Task> tasks;
 
             System.out.println("Hello! I'm Koala");
             System.out.println("What can I do for you?");
+
+            Store storage = new Store("./data/koala.txt");
+
+            try {
+                tasks = storage.load();
+            } catch (IOException e) {
+                tasks = new ArrayList<>();
+            }
+
 
             while (true) {
                 try {
@@ -61,6 +71,7 @@ public class Koala {
                         String[] parts = input.split(" /by ");
                         if (parts.length == 2) {
                             tasks.add(new Deadline(parts[0].substring(9), parts[1]));
+                            storage.save(tasks);
                             System.out.println("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
                         } else {
                             throw new KoalaException("Invalid deadline format.");
@@ -77,6 +88,7 @@ public class Koala {
                             String[] times = parts[1].split(" /to ");
                             if (times.length == 2) {
                                 tasks.add(new Event(parts[0].substring(6), times[0], times[1]));
+                                storage.save(tasks);
                                 System.out.println("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
                             } else {
                                 throw new KoalaException("Invalid event format.");
@@ -92,6 +104,7 @@ public class Koala {
                             throw new KoalaException("Invalid todo description.");
                         }
                         tasks.add(new Todo(input.substring(5)));
+                        storage.save(tasks);
                         System.out.println("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
                         continue;
                     }
