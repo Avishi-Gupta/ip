@@ -18,12 +18,20 @@ public class Task {
         this.isComplete = false;
     }
 
-    public String getDescript() {
+    public String getDescription() {
         return descript;
+    }
+
+    public boolean getIsComplete() {
+        return isComplete;
     }
 
     public void delete() {
     }
+
+    public String toStoreString() {
+        return "";
+    }   
 
     @Override
     public String toString() {
