@@ -1,3 +1,6 @@
+package koala.task;
+
+import koala.KoalaException;
 public class Task {
     private final String descript;
     private boolean isComplete;

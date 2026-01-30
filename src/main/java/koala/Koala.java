@@ -1,6 +1,12 @@
+package koala;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import koala.task.Deadline;
+import koala.task.Event;
+import koala.task.Task;
+import koala.task.Todo;
 
 public class Koala {
     public static void main(String[] args) throws KoalaException, IOException {
@@ -10,7 +16,7 @@ public class Koala {
             System.out.println("Hello! I'm Koala");
             System.out.println("What can I do for you?");
 
-            Store storage = new Store("./data/koala.txt");
+            Store storage = new Store("../data/koala.txt");
 
             try {
                 tasks = storage.load();

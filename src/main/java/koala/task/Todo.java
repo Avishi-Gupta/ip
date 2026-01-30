@@ -1,3 +1,7 @@
+package koala.task;
+
+import koala.KoalaException;
+
 public class Todo extends Task {
 
     public Todo(String description) throws KoalaException {
