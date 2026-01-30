@@ -69,7 +69,7 @@ public class Koala {
                         }
         
                         String[] parts = input.split(" /by ");
-                        if (parts.length == 2) {
+                        if (parts.length == 2 && !parts[0].substring(8).isEmpty() && !parts[1].isEmpty()) {
                             tasks.add(new Deadline(parts[0].substring(9), parts[1]));
                             storage.save(tasks);
                             System.out.println("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
@@ -84,9 +84,9 @@ public class Koala {
                             throw new KoalaException("Invalid event description.");
                         }
                         String[] parts = input.split(" /from ");
-                        if (parts.length == 2) {
+                        if (parts.length == 2 && !parts[0].substring(5).isEmpty()) {
                             String[] times = parts[1].split(" /to ");
-                            if (times.length == 2) {
+                            if (times.length == 2 && !times[0].isEmpty() && !times[1].isEmpty()) {
                                 tasks.add(new Event(parts[0].substring(6), times[0], times[1]));
                                 storage.save(tasks);
                                 System.out.println("Got it. I've added this task: " + tasks.get(tasks.size() - 1));

@@ -1,1 +1,5 @@
 T | 0 | sleep
+D | 0 | submit | Oct 10 2026
+D | 0 | report | Nov 11 2026
+D | 0 | trial | Dec 12 2026
+D | 0 | intern | Jan 01 2026
