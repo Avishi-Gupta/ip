@@ -14,8 +14,8 @@ public class Parser {
          try (Scanner scanner = new Scanner(System.in)) {
             ArrayList<Task> tasks;
 
-            System.out.println("Hello! I'm Koala");
-            System.out.println("What can I do for you?");
+            UI ui = new UI();
+            ui.showWelcomeMessage();
 
             Store storage = new Store("../data/koala.txt");
 
@@ -30,12 +30,12 @@ public class Parser {
                     String input = scanner.nextLine().trim();
                     
                     if (input.equals("bye")) {
-                        System.out.println("Bye. Hope to see you again soon!");
+                        ui.showGoodbyeMessage();
                         break;
                     }
 
                     if (input.equals("list")) {
-                        System.out.println("Here are the tasks in your list:");
+                        ui.showMessage  ("Here are the tasks in your list:");
                         for (int i = 0; i < tasks.size(); i++) {
                             System.out.println((i + 1) + ". " + tasks.get(i));
                         }
@@ -46,7 +46,7 @@ public class Parser {
                         int index = Integer.parseInt(input.substring(5)) - 1;
                         if (index >= 0 && index < tasks.size()) {
                             tasks.get(index).markAsComplete();
-                            System.out.println("Nice! I've marked this task as done: " + tasks.get(index));
+                            ui.showMessage("Nice! I've marked this task as done: " + tasks.get(index));
                         }
                         continue;
                     }
@@ -55,7 +55,7 @@ public class Parser {
                         int index = Integer.parseInt(input.substring(7)) - 1;
                         if (index >= 0 && index < tasks.size()) {
                             tasks.get(index).markAsIncomplete();
-                            System.out.println("OK, I've marked this task as not done yet: " + tasks.get(index));
+                            ui.showMessage("OK, I've marked this task as not done yet: " + tasks.get(index));
                         }
                         continue;
                     }
@@ -63,7 +63,7 @@ public class Parser {
                     if (input.startsWith("delete")) {
                         int index = Integer.parseInt(input.substring(7)) - 1;
                         if (index >= 0 && index < tasks.size()) {
-                            System.out.println("Noted. I've removed this task: " + tasks.get(index));
+                            ui.showMessage("Noted. I've removed this task: " + tasks.get(index));
                             tasks.remove(index);
                         }
                         continue;
@@ -78,7 +78,7 @@ public class Parser {
                         if (parts.length == 2 && !parts[0].substring(8).isEmpty() && !parts[1].isEmpty()) {
                             tasks.add(new Deadline(parts[0].substring(9), parts[1]));
                             storage.save(tasks);
-                            System.out.println("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
+                            ui.showMessage("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
                         } else {
                             throw new KoalaException("Invalid deadline format.");
                         }
@@ -95,7 +95,7 @@ public class Parser {
                             if (times.length == 2 && !times[0].isEmpty() && !times[1].isEmpty()) {
                                 tasks.add(new Event(parts[0].substring(6), times[0], times[1]));
                                 storage.save(tasks);
-                                System.out.println("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
+                                ui.showMessage("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
                             } else {
                                 throw new KoalaException("Invalid event format.");
                             }
@@ -111,12 +111,12 @@ public class Parser {
                         }
                         tasks.add(new Todo(input.substring(5)));
                         storage.save(tasks);
-                        System.out.println("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
+                        ui.showMessage("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
                         continue;
                     }
                     throw new KoalaException("I'm sorry, but I don't know what that means.");
                 } catch (KoalaException e) {
-                    System.out.println(e.getMessage());
+                    ui.showMessage(e.getMessage());
                }
             }
          }
