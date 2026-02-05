@@ -1,13 +1,14 @@
 package koala.task;
 
-import koala.KoalaException;
+import koala.InvalidTaskException;
+
 public class Task {
     private final String descript;
     private boolean isComplete;
 
-    public Task (String descript) throws KoalaException {
+    public Task (String descript) throws InvalidTaskException {
         if (descript == null || descript.trim().isEmpty()) {
-            throw new KoalaException("Task description cannot be empty.");
+            throw new InvalidTaskException("Task description cannot be empty.");
         }
         this.descript = descript;
         this.isComplete = false;

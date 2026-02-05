@@ -4,28 +4,26 @@ import java.util.ArrayList;
 import koala.task.Task;
 
 public class TaskList {
-    private ArrayList<Task> tasks;
-    private final Store storage;
+    private final ArrayList<Task> tasks;
 
-    public TaskList(String filePath) {
-        tasks = new ArrayList<>();
-        storage = new Store(filePath);
+    public TaskList(ArrayList<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public ArrayList<Task> getTasks() {
         return tasks;
     }
 
+    public Task getTaskByIndex(int index) {
+        return tasks.get(index);
+    }   
+
     public void addTask(Task task) {
         tasks.add(task);
     }   
 
-    public void saveTasks() throws Exception {
-        storage.save(tasks);
-    }
-
-    public void loadTasks() throws Exception {
-        tasks = storage.load();
+    public int getSize() {
+        return tasks.size();
     }
 
     public void deleteTask(int index) {

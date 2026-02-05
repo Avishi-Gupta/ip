@@ -1,5 +1,5 @@
 package koala.task;
-import koala.KoalaException;
+import koala.InvalidTaskException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -15,12 +15,12 @@ public class Deadline extends Task {
             DateTimeFormatter.ofPattern("MMM dd yyyy")
     );
 
-    public Deadline(String description, String due) throws KoalaException {
+    public Deadline(String description, String due) throws InvalidTaskException {
         super(description);
         this.due = parseDate(due);
     }
 
-    private LocalDate parseDate(String dateStr) throws KoalaException {
+    private LocalDate parseDate(String dateStr) throws InvalidTaskException {
         for (DateTimeFormatter format : INPUT_FORMATS) {
             try {
                 return LocalDate.parse(dateStr, format);
@@ -28,7 +28,7 @@ public class Deadline extends Task {
                 // Continue to the next format
             }
         }
-        throw new KoalaException("Invalid date format");
+        throw new InvalidTaskException("Invalid date format");
     }
 
     @Override

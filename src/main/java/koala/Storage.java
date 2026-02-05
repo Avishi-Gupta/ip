@@ -13,15 +13,15 @@ import koala.task.Task;
 import koala.task.Todo;
 
 
-public class Store {
+public class Storage {
     private final Path filePath;
 
-    public Store(String path) {
+    public Storage(String path) {
         this.filePath = Paths.get(path);
     }
 
- 
-    public ArrayList<Task> load() throws IOException, KoalaException {
+
+    public ArrayList<Task> loadTasks() throws IOException, InvalidTaskException {
         ArrayList<Task> tasks = new ArrayList<>();
 
         if (!Files.exists(filePath)) {
@@ -40,7 +40,7 @@ public class Store {
         return tasks;
     }
 
-    public void save(List<Task> tasks) throws IOException {
+    public void saveTasks(List<Task> tasks) throws IOException {
         List<String> lines = new ArrayList<>();
 
         for (Task task : tasks) {
@@ -50,7 +50,7 @@ public class Store {
         Files.write(filePath, lines);
     }
 
-    private Task parseTask(String line) throws KoalaException {
+    private Task parseTask(String line) throws InvalidTaskException {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
         boolean isDone = parts[1].equals("1");
@@ -58,17 +58,10 @@ public class Store {
 
         Task task;
         switch (type) {
-        case "T":
-            task = new Todo(desc);
-            break;
-        case "D":
-            task = new Deadline(desc, parts[3]);
-            break;
-        case "E":
-            task = new Event(desc, parts[3], parts[4]);
-            break;
-        default:
-            throw new IllegalArgumentException("Unknown task type");
+        case "T" -> task = new Todo(desc);
+        case "D" -> task = new Deadline(desc, parts[3]);
+        case "E" -> task = new Event(desc, parts[3], parts[4]);
+        default -> throw new IllegalArgumentException("Unknown task type");
         }
 
         if (isDone) {

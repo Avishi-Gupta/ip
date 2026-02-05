@@ -1,125 +1,127 @@
 package koala;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import koala.task.Deadline;
 import koala.task.Event;
-import koala.task.Task;
 import koala.task.Todo;
 
 public class Parser {
-    
-    public void run() throws KoalaException, IOException {
-         try (Scanner scanner = new Scanner(System.in)) {
-            ArrayList<Task> tasks;
+    private final UI ui;
+    private final Storage storage;
+    private final TaskList taskList;
 
-            UI ui = new UI();
-            ui.showWelcomeMessage();
+    public Parser(UI ui, Storage storage, TaskList taskList) {
+        this.ui = ui;
+        this.storage = storage;
+        this.taskList = taskList;
+    }
 
-            Store storage = new Store("../data/koala.txt");
-
-            try {
-                tasks = storage.load();
-            } catch (IOException e) {
-                tasks = new ArrayList<>();
-            }   
-
+    public void run() throws InvalidTaskException, IOException {
+        ui.showWelcomeMessage();
+        try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
                 try {
                     String input = scanner.nextLine().trim();
+                    ui.showUserCommand(input);
                     
                     if (input.equals("bye")) {
                         ui.showGoodbyeMessage();
                         break;
                     }
 
+                    handleCommand(input);
+                    storage.saveTasks(taskList.getTasks());
+                } catch (InvalidTaskException e) {
+                    ui.showError(e.getMessage());
+                }
+            }
+        } catch (IOException e) {
+            ui.showError("An error occurred while accessing the storage file.");
+        }
+    }
+
+    private void handleCommand(String input) throws InvalidTaskException, IOException {
                     if (input.equals("list")) {
-                        ui.showMessage  ("Here are the tasks in your list:");
-                        for (int i = 0; i < tasks.size(); i++) {
-                            System.out.println((i + 1) + ". " + tasks.get(i));
+                        showList();
+                        return;
                         }
-                        continue;
-                    }
 
                     if (input.startsWith("mark")) {
-                        int index = Integer.parseInt(input.substring(5)) - 1;
-                        if (index >= 0 && index < tasks.size()) {
-                            tasks.get(index).markAsComplete();
-                            ui.showMessage("Nice! I've marked this task as done: " + tasks.get(index));
-                        }
-                        continue;
+                        mark(input, true);
+                        return;
                     }
 
+
                     if (input.startsWith("unmark")) {
-                        int index = Integer.parseInt(input.substring(7)) - 1;
-                        if (index >= 0 && index < tasks.size()) {
-                            tasks.get(index).markAsIncomplete();
-                            ui.showMessage("OK, I've marked this task as not done yet: " + tasks.get(index));
-                        }
-                        continue;
+                        mark(input, false);
+                        return;
                     }
 
                     if (input.startsWith("delete")) {
-                        int index = Integer.parseInt(input.substring(7)) - 1;
-                        if (index >= 0 && index < tasks.size()) {
-                            ui.showMessage("Noted. I've removed this task: " + tasks.get(index));
-                            tasks.remove(index);
-                        }
-                        continue;
-                            }
+                        delete(input);
+                        return;
+                    }
 
                     if (input.startsWith("deadline")) {
-                        if (input.length() <= 9) {
-                            throw new KoalaException("Invalid deadline description.");
-                        }
-        
                         String[] parts = input.split(" /by ");
                         if (parts.length == 2 && !parts[0].substring(8).isEmpty() && !parts[1].isEmpty()) {
-                            tasks.add(new Deadline(parts[0].substring(9), parts[1]));
-                            storage.save(tasks);
-                            ui.showMessage("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
+                            taskList.addTask(new Deadline(parts[0].substring(9), parts[1]));
+                            ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
+                            return;
                         } else {
-                            throw new KoalaException("Invalid deadline format.");
+                            throw new InvalidTaskException("Invalid deadline format.");
                         }
-                        continue;
                     }
 
                     if (input.startsWith("event")) {
-                        if (input.length() <= 6) {
-                            throw new KoalaException("Invalid event description.");
-                        }
                         String[] parts = input.split(" /from ");
-                        if (parts.length == 2 && !parts[0].substring(5).isEmpty()) {
-                            String[] times = parts[1].split(" /to ");
-                            if (times.length == 2 && !times[0].isEmpty() && !times[1].isEmpty()) {
-                                tasks.add(new Event(parts[0].substring(6), times[0], times[1]));
-                                storage.save(tasks);
-                                ui.showMessage("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
-                            } else {
-                                throw new KoalaException("Invalid event format.");
-                            }
-                        } else {
-                            throw new KoalaException("Invalid event format.");
+                        if (parts.length != 2) {
+                            throw new InvalidTaskException("Invalid event format.");
                         }
-                        continue;
+
+                        String[] times = parts[1].split(" /to ");
+                        if (times.length != 2) {
+                            throw new InvalidTaskException("Invalid event format.");
+                        }
+                        taskList.addTask(new Event(parts[0].substring(6), times[0], times[1]));
+                        ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
+                        return;
                     }
 
                     if (input.startsWith("todo")) {
-                        if (input.length() <= 5) {
-                            throw new KoalaException("Invalid todo description.");
-                        }
-                        tasks.add(new Todo(input.substring(5)));
-                        storage.save(tasks);
-                        ui.showMessage("Got it. I've added this task: " + tasks.get(tasks.size() - 1));
-                        continue;
+                        taskList.addTask(new Todo(input.substring(5)));
+                        ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
+                        return;
                     }
-                    throw new KoalaException("I'm sorry, but I don't know what that means.");
-                } catch (KoalaException e) {
-                    ui.showMessage(e.getMessage());
-               }
-            }
-         }
+                    throw new InvalidTaskException("I'm sorry, but I don't know what that means.");
     }
 
+    private void showList() {
+        ui.showMessage("Here are the tasks in your list:");
+        for (int i = 0; i < taskList.getSize(); i++) {
+            System.out.println((i + 1) + ". " + taskList.getTaskByIndex(i));
+        }
+    }
+
+    private void mark(String input, boolean done) {
+        int index = Integer.parseInt(input.split(" ")[1]) - 1;
+        if (index < 0 || index >= taskList.getSize()) {
+            ui.showError("Invalid task number.");
+            return;
+        }
+        if (done) {
+            taskList.getTaskByIndex(index).markAsComplete();
+            ui.showMessage("Nice! I've marked this task as done:\n  " + taskList.getTaskByIndex(index));
+        } else {
+            taskList.getTaskByIndex(index).markAsIncomplete();
+            ui.showMessage("Ok! I've marked this task as not done:\n  " + taskList.getTaskByIndex(index));
+        }
+    }
+
+    private void delete(String input) {
+        int index = Integer.parseInt(input.split(" ")[1]) - 1;
+        ui.showMessage("Noted. I've removed this task:\n  " + taskList.getTaskByIndex(index));
+        taskList.deleteTask(index);
+    }
 }

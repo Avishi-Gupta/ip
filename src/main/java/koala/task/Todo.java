@@ -1,10 +1,10 @@
 package koala.task;
 
-import koala.KoalaException;
+import koala.InvalidTaskException;
 
 public class Todo extends Task {
 
-    public Todo(String description) throws KoalaException {
+    public Todo(String description) throws InvalidTaskException {
         super(description);
     }
 

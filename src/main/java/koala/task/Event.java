@@ -1,9 +1,9 @@
 package koala.task;
 
-import koala.KoalaException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import koala.InvalidTaskException;
 
 public class Event extends Task {
 
@@ -17,13 +17,13 @@ public class Event extends Task {
             DateTimeFormatter.ofPattern("MMM dd yyyy")
     );  
 
-    public Event(String description, String from, String to) throws KoalaException {
+    public Event(String description, String from, String to) throws InvalidTaskException {
         super(description);
         this.from = parseDate(from);
         this.to = parseDate(to);
     }
 
-    private LocalDate parseDate(String dateStr) throws KoalaException {
+    private LocalDate parseDate(String dateStr) throws InvalidTaskException {
         for (DateTimeFormatter format : INPUT_FORMATS) {
             try {
                 return LocalDate.parse(dateStr, format);
@@ -31,7 +31,7 @@ public class Event extends Task {
                 // Continue to the next format
             }
         }
-        throw new KoalaException("Invalid date format");
+        throw new InvalidTaskException("Invalid date format");
     }
 
     @Override
