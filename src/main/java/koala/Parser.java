@@ -11,6 +11,7 @@ import koala.task.Todo;
  * Parses and executes user commands for the Koala task management application.
  */
 public class Parser {
+
     private final UI ui;
     private final Storage storage;
     private final TaskList taskList;
@@ -38,7 +39,7 @@ public class Parser {
                 try {
                     String input = scanner.nextLine().trim();
                     ui.showUserCommand(input);
-                    
+
                     if (input.equals("bye")) {
                         ui.showGoodbyeMessage();
                         break;
@@ -56,59 +57,58 @@ public class Parser {
     }
 
     private void handleCommand(String input) throws InvalidTaskException, IOException {
-                    if (input.equals("list")) {
-                        showList();
-                        return;
-                        }
+        if (input.equals("list")) {
+            showList();
+            return;
+        }
 
-                    if (input.startsWith("mark")) {
-                        mark(input, true);
-                        return;
-                    }
+        if (input.startsWith("mark")) {
+            mark(input, true);
+            return;
+        }
 
+        if (input.startsWith("unmark")) {
+            mark(input, false);
+            return;
+        }
 
-                    if (input.startsWith("unmark")) {
-                        mark(input, false);
-                        return;
-                    }
+        if (input.startsWith("delete")) {
+            delete(input);
+            return;
+        }
 
-                    if (input.startsWith("delete")) {
-                        delete(input);
-                        return;
-                    }
+        if (input.startsWith("deadline")) {
+            String[] parts = input.split(" /by ");
+            if (parts.length == 2 && !parts[0].substring(8).isEmpty() && !parts[1].isEmpty()) {
+                taskList.addTask(new Deadline(parts[0].substring(9), parts[1]));
+                ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
+                return;
+            } else {
+                throw new InvalidTaskException("Invalid deadline format.");
+            }
+        }
 
-                    if (input.startsWith("deadline")) {
-                        String[] parts = input.split(" /by ");
-                        if (parts.length == 2 && !parts[0].substring(8).isEmpty() && !parts[1].isEmpty()) {
-                            taskList.addTask(new Deadline(parts[0].substring(9), parts[1]));
-                            ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
-                            return;
-                        } else {
-                            throw new InvalidTaskException("Invalid deadline format.");
-                        }
-                    }
+        if (input.startsWith("event")) {
+            String[] parts = input.split(" /from ");
+            if (parts.length != 2) {
+                throw new InvalidTaskException("Invalid event format.");
+            }
 
-                    if (input.startsWith("event")) {
-                        String[] parts = input.split(" /from ");
-                        if (parts.length != 2) {
-                            throw new InvalidTaskException("Invalid event format.");
-                        }
+            String[] times = parts[1].split(" /to ");
+            if (times.length != 2) {
+                throw new InvalidTaskException("Invalid event format.");
+            }
+            taskList.addTask(new Event(parts[0].substring(6), times[0], times[1]));
+            ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
+            return;
+        }
 
-                        String[] times = parts[1].split(" /to ");
-                        if (times.length != 2) {
-                            throw new InvalidTaskException("Invalid event format.");
-                        }
-                        taskList.addTask(new Event(parts[0].substring(6), times[0], times[1]));
-                        ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
-                        return;
-                    }
-
-                    if (input.startsWith("todo")) {
-                        taskList.addTask(new Todo(input.substring(5)));
-                        ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
-                        return;
-                    }
-                    throw new InvalidTaskException("I'm sorry, but I don't know what that means.");
+        if (input.startsWith("todo")) {
+            taskList.addTask(new Todo(input.substring(5)));
+            ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
+            return;
+        }
+        throw new InvalidTaskException("I'm sorry, but I don't know what that means.");
     }
 
     private void showList() {

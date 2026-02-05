@@ -17,6 +17,7 @@ import koala.task.Todo;
  * Handles loading and saving tasks to a file.
  */
 public class Storage {
+
     private final Path filePath;
 
     public Storage(String path) {
@@ -73,10 +74,14 @@ public class Storage {
 
         Task task;
         switch (type) {
-        case "T" -> task = new Todo(desc);
-        case "D" -> task = new Deadline(desc, parts[3]);
-        case "E" -> task = new Event(desc, parts[3], parts[4]);
-        default -> throw new IllegalArgumentException("Unknown task type");
+            case "T" ->
+                task = new Todo(desc);
+            case "D" ->
+                task = new Deadline(desc, parts[3]);
+            case "E" ->
+                task = new Event(desc, parts[3], parts[4]);
+            default ->
+                throw new IllegalArgumentException("Unknown task type");
         }
 
         if (isDone) {

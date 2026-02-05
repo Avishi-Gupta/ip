@@ -24,7 +24,7 @@ public class UI {
     private void divider() {
         System.out.println(DIVIDER);
     }
-    
+
     public void showGoodbyeMessage() {
         divider();
         System.out.println(RED + GOODBYE_MESSAGE + RESET);

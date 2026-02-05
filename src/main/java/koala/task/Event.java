@@ -9,7 +9,6 @@ import koala.InvalidTaskException;
 /**
  * Represents an event task with a description, start date, and end date.
  */
-
 public class Event extends Task {
 
     protected LocalDate from;
@@ -20,7 +19,7 @@ public class Event extends Task {
             DateTimeFormatter.ofPattern("yyyy-MM-dd"),
             DateTimeFormatter.ofPattern("dd/MM/yyyy"),
             DateTimeFormatter.ofPattern("MMM dd yyyy")
-    );  
+    );
 
     /**
      * Constructs an Event task.
@@ -30,7 +29,6 @@ public class Event extends Task {
      * @param to The end date as a string.
      * @throws InvalidTaskException If the date format is invalid.
      */
-
     public Event(String description, String from, String to) throws InvalidTaskException {
         super(description);
         this.from = parseDate(from);

@@ -1,11 +1,13 @@
 package koala.task;
 
 import koala.InvalidTaskException;
+
 /**
  * Represents a generic task with a description and completion status.
  */
 
 public class Task {
+
     private final String description;
     private boolean isComplete;
 
@@ -15,7 +17,7 @@ public class Task {
      * @param description The description of the task.
      * @throws InvalidTaskException If the description is invalid.
      */
-    public Task (String description) throws InvalidTaskException {
+    public Task(String description) throws InvalidTaskException {
         if (description == null || description.trim().isEmpty()) {
             throw new InvalidTaskException("Task description cannot be empty.");
         }
@@ -44,7 +46,7 @@ public class Task {
 
     public String toStoreString() {
         return "";
-    }   
+    }
 
     @Override
     public String toString() {

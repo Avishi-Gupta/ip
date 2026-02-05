@@ -8,6 +8,7 @@ import koala.task.Task;
  * Represents a list of tasks.
  */
 public class TaskList {
+
     private final ArrayList<Task> tasks;
 
     public TaskList(ArrayList<Task> tasks) {
@@ -20,11 +21,11 @@ public class TaskList {
 
     public Task getTaskByIndex(int index) {
         return tasks.get(index);
-    }   
+    }
 
     public void addTask(Task task) {
         tasks.add(task);
-    }   
+    }
 
     public int getSize() {
         return tasks.size();

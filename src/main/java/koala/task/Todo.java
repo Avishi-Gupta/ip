@@ -1,6 +1,7 @@
 package koala.task;
 
 import koala.InvalidTaskException;
+
 /**
  * Represents a todo task with a description.
  */
@@ -12,7 +13,6 @@ public class Todo extends Task {
      * @param description The description of the todo task.
      * @throws InvalidTaskException If the description is invalid.
      */
-    
     public Todo(String description) throws InvalidTaskException {
         super(description);
     }

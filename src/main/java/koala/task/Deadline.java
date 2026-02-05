@@ -1,4 +1,5 @@
 package koala.task;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,7 +27,6 @@ public class Deadline extends Task {
      * @param due The due date as a string.
      * @throws InvalidTaskException If the date format is invalid.
      */
-
     public Deadline(String description, String due) throws InvalidTaskException {
         super(description);
         this.due = parseDate(due);
