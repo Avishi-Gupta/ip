@@ -1,10 +1,12 @@
 package koala;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import koala.task.Deadline;
 import koala.task.Event;
+import koala.task.Task;
 import koala.task.Todo;
 
 /**
@@ -77,6 +79,11 @@ public class Parser {
             return;
         }
 
+        if (input.startsWith("find")) {
+            find(input);
+            return;
+        }
+
         if (input.startsWith("deadline")) {
             String[] parts = input.split(" /by ");
             if (parts.length == 2 && !parts[0].substring(8).isEmpty() && !parts[1].isEmpty()) {
@@ -108,6 +115,7 @@ public class Parser {
             ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
             return;
         }
+
         throw new InvalidTaskException("I'm sorry, but I don't know what that means.");
     }
 
@@ -141,5 +149,19 @@ public class Parser {
         }
         ui.showMessage("Noted. I've removed this task:\n  " + taskList.getTaskByIndex(index));
         taskList.deleteTask(index);
+    }
+
+    private void find(String input) throws InvalidTaskException {
+        if (input.length() <= 5) {
+            throw new InvalidTaskException("Please provide a keyword to search for.");
+        }
+
+        String keyword = input.substring(5).trim();
+        ArrayList<Task> matches = taskList.findTasks(keyword);
+
+        ui.showMessage("Here are the matching tasks in your list:");
+        for (int i = 0; i < matches.size(); i++) {
+            System.out.println((i + 1) + ". " + matches.get(i));
+        }
     }
 }
