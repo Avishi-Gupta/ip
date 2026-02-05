@@ -7,12 +7,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 import koala.task.Deadline;
 import koala.task.Event;
 import koala.task.Task;
 import koala.task.Todo;
 
-
+/**
+ * Handles loading and saving tasks to a file.
+ */
 public class Storage {
     private final Path filePath;
 
@@ -20,7 +23,13 @@ public class Storage {
         this.filePath = Paths.get(path);
     }
 
-
+    /**
+     * Loads tasks from the storage file.
+     *
+     * @return A list of tasks loaded from the file.
+     * @throws IOException If an error occurs while reading the file.
+     * @throws InvalidTaskException If a task in the file is invalid.
+     */
     public ArrayList<Task> loadTasks() throws IOException, InvalidTaskException {
         ArrayList<Task> tasks = new ArrayList<>();
 
@@ -40,6 +49,12 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the list of tasks to the storage file.
+     *
+     * @param tasks The list of tasks to save.
+     * @throws IOException If an error occurs while writing to the file.
+     */
     public void saveTasks(List<Task> tasks) throws IOException {
         List<String> lines = new ArrayList<>();
 

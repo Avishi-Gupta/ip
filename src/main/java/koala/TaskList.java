@@ -1,8 +1,12 @@
 package koala;
 
 import java.util.ArrayList;
+
 import koala.task.Task;
 
+/**
+ * Represents a list of tasks.
+ */
 public class TaskList {
     private final ArrayList<Task> tasks;
 

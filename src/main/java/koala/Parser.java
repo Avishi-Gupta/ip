@@ -2,21 +2,35 @@ package koala;
 
 import java.io.IOException;
 import java.util.Scanner;
+
 import koala.task.Deadline;
 import koala.task.Event;
 import koala.task.Todo;
 
+/**
+ * Parses and executes user commands for the Koala task management application.
+ */
 public class Parser {
     private final UI ui;
     private final Storage storage;
     private final TaskList taskList;
 
+    /**
+     * Constructs a Parser.
+     *
+     * @param ui The user interface for the application.
+     * @param storage The storage for saving and loading tasks.
+     * @param taskList The list of tasks to manage.
+     */
     public Parser(UI ui, Storage storage, TaskList taskList) {
         this.ui = ui;
         this.storage = storage;
         this.taskList = taskList;
     }
 
+    /**
+     * Runs the main command loop, processing user input until "bye" is entered.
+     */
     public void run() throws InvalidTaskException, IOException {
         ui.showWelcomeMessage();
         try (Scanner scanner = new Scanner(System.in)) {
@@ -106,7 +120,7 @@ public class Parser {
 
     private void mark(String input, boolean done) {
         int index = Integer.parseInt(input.split(" ")[1]) - 1;
-        if (index < 0 || index >= taskList.getSize()) {
+        if (index < 0 || index >= taskList.getSize() || String.valueOf(index).isEmpty()) {
             ui.showError("Invalid task number.");
             return;
         }
@@ -121,6 +135,10 @@ public class Parser {
 
     private void delete(String input) {
         int index = Integer.parseInt(input.split(" ")[1]) - 1;
+        if (index < 0 || index >= taskList.getSize() || String.valueOf(index).isEmpty()) {
+            ui.showError("Invalid task number.");
+            return;
+        }
         ui.showMessage("Noted. I've removed this task:\n  " + taskList.getTaskByIndex(index));
         taskList.deleteTask(index);
     }

@@ -1,5 +1,8 @@
 package koala;
 
+/**
+ * User interface for the Koala application.
+ */
 public class UI {
 
     private static final String RESET = "\u001B[0m";
@@ -21,7 +24,7 @@ public class UI {
     private void divider() {
         System.out.println(DIVIDER);
     }
-
+    
     public void showGoodbyeMessage() {
         divider();
         System.out.println(RED + GOODBYE_MESSAGE + RESET);

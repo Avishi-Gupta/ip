@@ -2,6 +2,10 @@ package koala;
 
 import java.io.IOException;
 
+/**
+ * The main class for the Koala task management application.
+ */
+
 public class Koala {
     public static void main(String[] args) throws IOException, InvalidTaskException {
         UI ui = new UI();

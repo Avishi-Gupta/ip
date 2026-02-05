@@ -1,9 +1,13 @@
 package koala.task;
-import koala.InvalidTaskException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import koala.InvalidTaskException;
+
+/**
+ * Represents a deadline task with a description and a due date.
+ */
 public class Deadline extends Task {
 
     protected LocalDate due;
@@ -14,6 +18,14 @@ public class Deadline extends Task {
             DateTimeFormatter.ofPattern("dd/MM/yyyy"),
             DateTimeFormatter.ofPattern("MMM dd yyyy")
     );
+
+    /**
+     * Constructs a Deadline task.
+     *
+     * @param description The description of the deadline task.
+     * @param due The due date as a string.
+     * @throws InvalidTaskException If the date format is invalid.
+     */
 
     public Deadline(String description, String due) throws InvalidTaskException {
         super(description);
