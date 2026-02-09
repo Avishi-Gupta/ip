@@ -31,8 +31,15 @@ public class MainWindow extends AnchorPane {
     }
 
     /** Injects the Koala instance */
-    public void setKoala(Koala k) {
-        koala = k;
+    public void setKoala(Koala koala) {
+        this.koala = koala;
+
+        dialogContainer.getChildren().add(
+            DialogBox.getKoalaDialog(
+                "Hello! I'm Koala 🐨\nWhat can I do for you today?",
+                koalaImage
+            )
+        );
     }
 
     /**
