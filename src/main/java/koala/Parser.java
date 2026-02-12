@@ -31,33 +31,12 @@ public class Parser {
         this.taskList = taskList;
     }
 
-    /**
-     * Runs the main command loop, processing user input until "bye" is entered.
+    /*
+     * Parses a user command and returns the appropriate response.
+     *
+     * @param input The user's input command.
+     * @return The response to be displayed to the user.
      */
-    public void run() throws InvalidTaskException, IOException {
-        ui.showWelcomeMessage();
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (true) {
-                try {
-                    String input = scanner.nextLine().trim();
-                    ui.showUserCommand(input);
-
-                    if (input.equals("bye")) {
-                        ui.showGoodbyeMessage();
-                        break;
-                    }
-
-                    handleCommand(input);
-                    storage.saveTasks(taskList.getTasks());
-                } catch (InvalidTaskException e) {
-                    ui.showError(e.getMessage());
-                }
-            }
-        } catch (IOException e) {
-            ui.showError("An error occurred while accessing the storage file.");
-        }
-    }
-
     public String parseCommand(String input) {
         try {
             if (input.equals("bye")) {
@@ -75,67 +54,12 @@ public class Parser {
         }
     }
 
-    private void handleCommand(String input) throws InvalidTaskException, IOException {
-        if (input.equals("list")) {
-            showList();
-            return;
-        }
-
-        if (input.startsWith("mark")) {
-            mark(input, true);
-            return;
-        }
-
-        if (input.startsWith("unmark")) {
-            mark(input, false);
-            return;
-        }
-
-        if (input.startsWith("delete")) {
-            delete(input);
-            return;
-        }
-
-        if (input.startsWith("find")) {
-            find(input);
-            return;
-        }
-
-        if (input.startsWith("deadline")) {
-            String[] parts = input.split(" /by ");
-            if (parts.length == 2 && !parts[0].substring(8).isEmpty() && !parts[1].isEmpty()) {
-                taskList.addTask(new Deadline(parts[0].substring(9), parts[1]));
-                ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
-                return;
-            } else {
-                throw new InvalidTaskException("Invalid deadline format.");
-            }
-        }
-
-        if (input.startsWith("event")) {
-            String[] parts = input.split(" /from ");
-            if (parts.length != 2) {
-                throw new InvalidTaskException("Invalid event format.");
-            }
-
-            String[] times = parts[1].split(" /to ");
-            if (times.length != 2) {
-                throw new InvalidTaskException("Invalid event format.");
-            }
-            taskList.addTask(new Event(parts[0].substring(6), times[0], times[1]));
-            ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
-            return;
-        }
-
-        if (input.startsWith("todo")) {
-            taskList.addTask(new Todo(input.substring(5)));
-            ui.showMessage("Got it. I've added this task: " + taskList.getTasks().get(taskList.getTasks().size() - 1));
-            return;
-        }
-
-        throw new InvalidTaskException("I'm sorry, but I don't know what that means.");
-    }
-
+    /*
+        * Handles a user command and returns the appropriate response.
+        * @param input The user's input command.
+        * @return The response to be displayed to the user.
+        * @throws InvalidTaskException If the command is invalid.
+     */
     private String handleCommandAndReturn(String input) throws InvalidTaskException {
         if (input.equals("list")) {
             StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");

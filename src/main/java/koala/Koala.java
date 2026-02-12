@@ -11,7 +11,9 @@ public class Koala {
     private final TaskList taskList;
     private final Parser parser;
 
-    // Constructor for GUI
+    /**
+     * Constructs a Koala application.
+     */
     public Koala() {
         try {
             ui = new UI();
@@ -20,19 +22,6 @@ public class Koala {
             parser = new Parser(ui, storage, taskList);
         } catch (IOException | InvalidTaskException e) {
             throw new RuntimeException("Failed to start Koala");
-        }
-    }
-
-    // CLI entry point
-    public static void main(String[] args) {
-        try {
-            UI ui = new UI();
-            Storage storage = new Storage("../data/koala.txt");
-            TaskList taskList = new TaskList(storage.loadTasks());
-            Parser parser = new Parser(ui, storage, taskList);
-            parser.run();
-        } catch (IOException | InvalidTaskException e) {
-            System.out.println("Failed to start Koala.");
         }
     }
 
