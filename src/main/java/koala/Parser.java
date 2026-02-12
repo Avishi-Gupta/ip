@@ -26,6 +26,10 @@ public class Parser {
      * @param taskList The list of tasks to manage.
      */
     public Parser(UI ui, Storage storage, TaskList taskList) {
+        assert ui != null : "UI should not be null";
+        assert storage != null : "Storage should not be null";
+        assert taskList != null : "TaskList should not be null";
+
         this.ui = ui;
         this.storage = storage;
         this.taskList = taskList;
@@ -61,6 +65,8 @@ public class Parser {
         * @throws InvalidTaskException If the command is invalid.
      */
     private String handleCommandAndReturn(String input) throws InvalidTaskException {
+        assert input != null : "Input should not be null";
+        
         if (input.equals("list")) {
             StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
             for (int i = 0; i < taskList.getSize(); i++) {
