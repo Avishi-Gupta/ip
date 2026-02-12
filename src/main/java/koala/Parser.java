@@ -25,6 +25,10 @@ public class Parser {
      * @param taskList The list of tasks to manage.
      */
     public Parser(UI ui, Storage storage, TaskList taskList) {
+        assert ui != null : "UI should not be null";
+        assert storage != null : "Storage should not be null";
+        assert taskList != null : "TaskList should not be null";
+
         this.ui = ui;
         this.storage = storage;
         this.taskList = taskList;
