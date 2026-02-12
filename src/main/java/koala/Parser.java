@@ -13,7 +13,6 @@ import koala.task.Todo;
  * Parses and executes user commands for the Koala task management application.
  */
 public class Parser {
-
     private final UI ui;
     private final Storage storage;
     private final TaskList taskList;
@@ -47,7 +46,7 @@ public class Parser {
                 return "Bye. Hope to see you again soon!";
             }
 
-            String response = handleCommandAndReturn(input);
+            String response = handleCommand(input);
             storage.saveTasks(taskList.getTasks());
             return response;
 
@@ -64,115 +63,139 @@ public class Parser {
         * @return The response to be displayed to the user.
         * @throws InvalidTaskException If the command is invalid.
      */
-    private String handleCommandAndReturn(String input) throws InvalidTaskException {
-        assert input != null : "Input should not be null";
-        
+    private String handleCommand(String input) throws InvalidTaskException {
         if (input.equals("list")) {
-            StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
-            for (int i = 0; i < taskList.getSize(); i++) {
-                sb.append(i + 1).append(". ")
-                .append(taskList.getTaskByIndex(i)).append("\n");
-            }
-            return sb.toString();
+            return listTasks();
         }
 
         if (input.startsWith("mark")) {
-            int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            taskList.getTaskByIndex(index).markAsComplete();
-            return "Nice! I've marked this task as done:\n  "
-                    + taskList.getTaskByIndex(index);
+            return markTask(input, true);
         }
 
         if (input.startsWith("unmark")) {
-            int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            taskList.getTaskByIndex(index).markAsIncomplete();
-            return "Ok! I've marked this task as not done:\n  "
-                    + taskList.getTaskByIndex(index);
+            return markTask(input, false);
         }
 
         if (input.startsWith("delete")) {
-            int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            Task removed = taskList.getTaskByIndex(index);
-            taskList.deleteTask(index);
-            return "Noted. I've removed this task:\n  " + removed;
+            return deleteTask(input);
         }
 
         if (input.startsWith("todo")) {
-            taskList.addTask(new Todo(input.substring(5)));
-            return "Got it. I've added this task:\n  "
-                    + taskList.getTaskByIndex(taskList.getSize() - 1);
+            return addTodo(input);
         }
 
         if (input.startsWith("deadline")) {
-            String[] parts = input.split(" /by ");
-            if (parts.length != 2) {
-                throw new InvalidTaskException("Invalid deadline format.");
-            }
-            taskList.addTask(new Deadline(parts[0].substring(9), parts[1]));
-            return "Got it. I've added this task:\n  "
-                    + taskList.getTaskByIndex(taskList.getSize() - 1);
+            return addDeadline(input);
         }
 
         if (input.startsWith("event")) {
-            String[] parts = input.split(" /from ");
-            if (parts.length != 2) {
-                throw new InvalidTaskException("Invalid event format.");
-            }
-            String[] times = parts[1].split(" /to ");
-            if (times.length != 2) {
-                throw new InvalidTaskException("Invalid event format.");
-            }
-            taskList.addTask(new Event(parts[0].substring(6), times[0], times[1]));
-            return "Got it. I've added this task:\n  "
-                    + taskList.getTaskByIndex(taskList.getSize() - 1);
+            return addEvent(input);
         }
 
         throw new InvalidTaskException("I'm sorry, but I don't know what that means.");
     }
 
-    private void showList() {
-        ui.showMessage("Here are the tasks in your list:");
+    /**
+     * Extracts task index safely.
+     */
+    private int extractIndex(String input) throws InvalidTaskException {
+        String[] parts = input.split(" ");
+
+        if (parts.length < 2) {
+            throw new InvalidTaskException("Please provide a task number.");
+        }
+
+        try {
+            int index = Integer.parseInt(parts[1]) - 1;
+
+            if (index < 0 || index >= taskList.getSize()) {
+                throw new InvalidTaskException("Invalid task number.");
+            }
+
+            return index;
+        } catch (NumberFormatException e) {
+            throw new InvalidTaskException("Task number must be a valid integer.");
+        }
+    }
+
+    private String addTodo(String input) throws InvalidTaskException {
+        String description = input.substring(5).trim();
+        if (description.isEmpty()) {
+            throw new InvalidTaskException("The description of a todo cannot be empty.");
+        }
+
+        taskList.addTask(new Todo(description));
+        return "Got it. I've added this task:\n  "
+                + taskList.getTaskByIndex(taskList.getSize() - 1);
+    }
+
+    private String addDeadline(String input) throws InvalidTaskException {
+        String[] parts = input.split(" /by ");
+        if (parts.length != 2) {
+            throw new InvalidTaskException("Invalid deadline format. Use: deadline <desc> /by <time>");
+        }
+
+        String description = parts[0].substring(9).trim();
+        String by = parts[1].trim();
+
+        taskList.addTask(new Deadline(description, by));
+        return "Got it. I've added this task:\n  "
+                + taskList.getTaskByIndex(taskList.getSize() - 1);
+    }
+
+    private String addEvent(String input) throws InvalidTaskException {
+        String[] parts = input.split(" /from ");
+        if (parts.length != 2) {
+            throw new InvalidTaskException("Invalid event format.");
+        }
+
+        String[] times = parts[1].split(" /to ");
+        if (times.length != 2) {
+            throw new InvalidTaskException("Invalid event format.");
+        }
+
+        String description = parts[0].substring(6).trim();
+        String from = times[0].trim();
+        String to = times[1].trim();
+
+        taskList.addTask(new Event(description, from, to));
+        return "Got it. I've added this task:\n  "
+                + taskList.getTaskByIndex(taskList.getSize() - 1);
+    }
+    
+    private String listTasks() {
+        StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
         for (int i = 0; i < taskList.getSize(); i++) {
-            System.out.println((i + 1) + ". " + taskList.getTaskByIndex(i));
+            sb.append(i + 1)
+              .append(". ")
+              .append(taskList.getTaskByIndex(i))
+              .append("\n");
         }
+        return sb.toString();
     }
 
-    private void mark(String input, boolean done) {
-        int index = Integer.parseInt(input.split(" ")[1]) - 1;
-        if (index < 0 || index >= taskList.getSize() || String.valueOf(index).isEmpty()) {
-            ui.showError("Invalid task number.");
-            return;
-        }
-        if (done) {
-            taskList.getTaskByIndex(index).markAsComplete();
-            ui.showMessage("Nice! I've marked this task as done:\n  " + taskList.getTaskByIndex(index));
+    private String markTask(String input, boolean mark) throws InvalidTaskException {
+        int index = extractIndex(input);
+
+        Task task = taskList.getTaskByIndex(index);
+
+        if (mark) {
+            task.markAsComplete();
+            return "Nice! I've marked this task as done:\n  " + task;
         } else {
-            taskList.getTaskByIndex(index).markAsIncomplete();
-            ui.showMessage("Ok! I've marked this task as not done:\n  " + taskList.getTaskByIndex(index));
+            task.markAsIncomplete();
+            return "Ok! I've marked this task as not done:\n  " + task;
         }
     }
 
-    private void delete(String input) {
-        int index = Integer.parseInt(input.split(" ")[1]) - 1;
-        if (index < 0 || index >= taskList.getSize() || String.valueOf(index).isEmpty()) {
-            ui.showError("Invalid task number.");
-            return;
-        }
-        ui.showMessage("Noted. I've removed this task:\n  " + taskList.getTaskByIndex(index));
+    private String deleteTask(String input) throws InvalidTaskException {
+        int index = extractIndex(input);
+
+        Task removed = taskList.getTaskByIndex(index);
         taskList.deleteTask(index);
+
+        return "Noted. I've removed this task:\n  " + removed;
     }
-
-    private void find(String input) throws InvalidTaskException {
-        if (input.length() <= 5) {
-            throw new InvalidTaskException("Please provide a keyword to search for.");
-        }
-
-        String keyword = input.substring(5).trim();
-        ArrayList<Task> matches = taskList.findTasks(keyword);
-
-        ui.showMessage("Here are the matching tasks in your list:");
-        for (int i = 0; i < matches.size(); i++) {
-            System.out.println((i + 1) + ". " + matches.get(i));
-        }
-    }
+    
+    
 }

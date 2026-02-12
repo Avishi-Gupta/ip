@@ -77,7 +77,7 @@ public class Deadline extends Task {
     }
 
     @Override
-    public String toStoreString() {
+    public String formatForStorage() {
         return "D | " + (this.getIsComplete() ? "1" : "0") + " | " + this.getDescription() + " | " + this.formatForDisplay(this.due);
     }
 

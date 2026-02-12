@@ -60,7 +60,7 @@ public class Storage {
         List<String> lines = new ArrayList<>();
 
         for (Task task : tasks) {
-            lines.add(task.toStoreString());
+            lines.add(task.formatForStorage());
         }
 
         Files.write(filePath, lines);

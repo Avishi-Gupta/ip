@@ -18,7 +18,7 @@ public class Todo extends Task {
     }
 
     @Override
-    public String toStoreString() {
+    public String formatForStorage() {
         return "T | " + (this.getIsComplete() ? "1" : "0") + " | " + this.getDescription();
     }
 
