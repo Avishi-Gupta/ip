@@ -81,7 +81,7 @@ public class Event extends Task {
     }
 
     @Override
-    public String toStoreString() {
+    public String formatForStorage() {
         return "E | " + (this.getIsComplete() ? "1" : "0") + " | " + this.getDescription() + " | " + this.formatForDisplay(this.from) + " | " + this.formatForDisplay(this.to);
     }
 

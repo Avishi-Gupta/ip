@@ -44,7 +44,7 @@ public class Task {
     public void delete() {
     }
 
-    public String toStoreString() {
+    public String formatForStorage() {
         return "";
     }
 
