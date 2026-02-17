@@ -1,5 +1,7 @@
 package koala.task;
 
+import java.time.LocalDate;
+
 import koala.InvalidTaskException;
 
 /**
@@ -46,6 +48,10 @@ public class Task {
 
     public String formatForStorage() {
         return "";
+    }
+
+    public boolean isScheduledFor(LocalDate date) {
+    return false;
     }
 
     @Override

@@ -28,9 +28,8 @@ public class Deadline extends Task {
             DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm")
     );
 
-    /**
+    /*
      * Constructs a Deadline task.
-     *
      * @param description The description of the deadline task.
      * @param due The due date as a string.
      * @throws InvalidTaskException If the date format is invalid.
@@ -41,12 +40,12 @@ public class Deadline extends Task {
     }
 
     /*
-        * Parses a date string into a LocalDateTime object using multiple formats.
-        *
-        * @param dateStr The date string to parse.
-        * @return The parsed LocalDateTime object.
-        * @throws InvalidTaskException If the date format is invalid.
-        */
+    * Parses a date string into a LocalDateTime object using multiple formats.
+    *
+    * @param dateStr The date string to parse.
+    * @return The parsed LocalDateTime object.
+    * @throws InvalidTaskException If the date format is invalid.
+    */
     private LocalDateTime parseDate(String dateStr) throws InvalidTaskException {
         for (DateTimeFormatter format : INPUT_FORMATS) {
             try {
@@ -64,16 +63,25 @@ public class Deadline extends Task {
     }
 
     /* 
-        * Formats a LocalDateTime object for display.
-        *
-        * @param dateTime The LocalDateTime object to format.
-        * @return The formatted date string.
-        */
+    * Formats a LocalDateTime object for display.
+    * @param dateTime The LocalDateTime object to format.
+    * @return The formatted date string.
+    */
     private String formatForDisplay(LocalDateTime dateTime) { 
         if (dateTime.toLocalTime().equals(LocalTime.MIDNIGHT)) {
             return dateTime.format(DISPLAY_DATE_FORMAT); 
         } 
         return dateTime.format(DISPLAY_DATE_TIME_FORMAT); 
+    }
+
+    /* 
+    * Checks if the deadline is scheduled for a specific date.
+    * @param date The date to check against.
+    * @return True if the deadline is on or before the specified date, false otherwise.
+     */
+    @Override
+    public boolean isScheduledFor(LocalDate date) {
+        return due.toLocalDate().equals(date);
     }
 
     @Override

@@ -96,3 +96,49 @@
 
     //     throw new InvalidTaskException("I'm sorry, but I don't know what that means.");
     // }
+
+   //  private void showList() {
+   //      ui.showMessage("Here are the tasks in your list:");
+   //      for (int i = 0; i < taskList.getSize(); i++) {
+   //          System.out.println((i + 1) + ". " + taskList.getTaskByIndex(i));
+   //      }
+   //  }
+
+   //  private void mark(String input, boolean done) {
+   //      int index = Integer.parseInt(input.split(" ")[1]) - 1;
+   //      if (index < 0 || index >= taskList.getSize() || String.valueOf(index).isEmpty()) {
+   //          ui.showError("Invalid task number.");
+   //          return;
+   //      }
+   //      if (done) {
+   //          taskList.getTaskByIndex(index).markAsComplete();
+   //          ui.showMessage("Nice! I've marked this task as done:\n  " + taskList.getTaskByIndex(index));
+   //      } else {
+   //          taskList.getTaskByIndex(index).markAsIncomplete();
+   //          ui.showMessage("Ok! I've marked this task as not done:\n  " + taskList.getTaskByIndex(index));
+   //      }
+   //  }
+
+   //  private void delete(String input) {
+   //      int index = Integer.parseInt(input.split(" ")[1]) - 1;
+   //      if (index < 0 || index >= taskList.getSize() || String.valueOf(index).isEmpty()) {
+   //          ui.showError("Invalid task number.");
+   //          return;
+   //      }
+   //      ui.showMessage("Noted. I've removed this task:\n  " + taskList.getTaskByIndex(index));
+   //      taskList.deleteTask(index);
+   //  }
+
+   //  private void find(String input) throws InvalidTaskException {
+   //      if (input.length() <= 5) {
+   //          throw new InvalidTaskException("Please provide a keyword to search for.");
+   //      }
+
+   //      String keyword = input.substring(5).trim();
+   //      ArrayList<Task> matches = taskList.findTasks(keyword);
+
+   //      ui.showMessage("Here are the matching tasks in your list:");
+   //      for (int i = 0; i < matches.size(); i++) {
+   //          System.out.println((i + 1) + ". " + matches.get(i));
+   //      }
+   //  }

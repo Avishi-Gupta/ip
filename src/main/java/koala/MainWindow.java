@@ -49,7 +49,14 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = koala.getResponse(input);
+        String response;
+        
+        try {
+            response = koala.getResponse(input);
+        } catch (Exception e) {
+            response = e.getMessage();
+        }
+
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getKoalaDialog(response, koalaImage)
