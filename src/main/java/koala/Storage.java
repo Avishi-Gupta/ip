@@ -66,6 +66,12 @@ public class Storage {
         Files.write(filePath, lines);
     }
 
+    /**
+     * Parses a line from the storage file into a Task object.
+     * @param line The line to parse.
+     * @return The parsed Task object.
+     * @throws InvalidTaskException If the task format is invalid.
+     */
     private Task parseTask(String line) throws InvalidTaskException {
         String[] parts = line.split(" \\| ");
         String type = parts[0];

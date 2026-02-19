@@ -6,7 +6,6 @@ import java.io.IOException;
  * The main class for the Koala task management application.
  */
 public class Koala {
-    private final UI ui;
     private final Storage storage;
     private final TaskList taskList;
     private final Parser parser;
@@ -16,12 +15,10 @@ public class Koala {
      */
     public Koala() {
         try {
-            ui = new UI();
             storage = new Storage("../data/koala.txt");
             taskList = new TaskList(storage.loadTasks());
-            parser = new Parser(ui, storage, taskList);
+            parser = new Parser(storage, taskList);
 
-            assert ui != null : "UI should be initialized";
             assert storage != null : "Storage should be initialized";
             assert taskList != null : "TaskList should be initialized";
             assert parser != null : "Parser should be initialized";

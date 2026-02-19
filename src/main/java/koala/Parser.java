@@ -24,7 +24,7 @@ public class Parser {
      * @param storage The storage for saving and loading tasks.
      * @param taskList The list of tasks to manage.
      */
-    public Parser(UI ui, Storage storage, TaskList taskList) {
+    public Parser(Storage storage, TaskList taskList) {
         assert storage != null : "Storage should not be null";
         assert taskList != null : "TaskList should not be null";
 
@@ -32,7 +32,7 @@ public class Parser {
         this.taskList = taskList;
     }
 
-    /*
+    /**
      * Parses a user command and returns the appropriate response.
      * @param input The user's input command.
      * @return The response to be displayed to the user.
@@ -54,50 +54,56 @@ public class Parser {
         }
     }
 
-    /*
-        * Handles a user command and returns the appropriate response.
-        * @param input The user's input command.
-        * @return The response to be displayed to the user.
-        * @throws InvalidTaskException If the command is invalid.
+    /**
+     * Handles a user command and returns the appropriate response.
+     * @param input The user's input command.
+     * @return The response to be displayed to the user.
+     * @throws InvalidTaskException If the command is invalid.
      */
     private String handleCommand(String input) throws InvalidTaskException {
-        if (input.startsWith("list")) {
+        String trimmedInput = input.trim();
+
+        if (trimmedInput.startsWith("list")) {
             return listTasks();
         }
 
-        if (input.startsWith("mark")) {
-            return markTask(input, true);
+        if (trimmedInput.startsWith("mark")) {
+            return markTask(trimmedInput, true);
         }
 
-        if (input.startsWith("unmark")) {
-            return markTask(input, false);
+        if (trimmedInput.startsWith("unmark")) {
+            return markTask(trimmedInput, false);
         }
 
-        if (input.startsWith("delete")) {
-            return deleteTask(input);
+        if (trimmedInput.startsWith("delete")) {
+            return deleteTask(trimmedInput);
         }
 
-        if (input.startsWith("find")) {
-            return findTasks(input);
+        if (trimmedInput.startsWith("find")) {
+            return findTasks(trimmedInput);
         }
 
-        if (input.startsWith("todo")) {
-            return addTodoTask(input);
+        if (trimmedInput.startsWith("todo")) {
+            return addTodoTask(trimmedInput);
         }
 
-        if (input.startsWith("deadline")) {
-            return addDeadlineTask(input);
+        if (trimmedInput.startsWith("deadline")) {
+            return addDeadlineTask(trimmedInput);
         }
 
-        if (input.startsWith("event")) {
-            return addEventTask(input);
+        if (trimmedInput.startsWith("event")) {
+            return addEventTask(trimmedInput);
         }
 
-        if (input.startsWith("schedule")) {
-            return getSchedule(input);
+        if (trimmedInput.startsWith("schedule")) {
+            return getSchedule(trimmedInput);
         }
 
         throw new InvalidTaskException("I'm sorry, but I don't know what that means.");
+    }
+
+    public boolean isExitCommand(String input) {
+        return input.equals("bye");
     }
 
     /**
@@ -123,7 +129,7 @@ public class Parser {
         }
     }
 
-    /*
+    /**
      * Adds a todo task.
      * @param input The user's input command.
      * @return The response to be displayed to the user.
@@ -140,7 +146,7 @@ public class Parser {
                 + taskList.getTaskByIndex(taskList.getSize() - 1);
     }
 
-    /*
+    /**
      * Adds a deadline task.
      * @param input The user's input command.
      * @return The response to be displayed to the user.
@@ -160,13 +166,12 @@ public class Parser {
                 + taskList.getTaskByIndex(taskList.getSize() - 1);
     }
 
-    /*
+    /**
      * Adds an event task.
      * @param input The user's input command.
      * @return The response to be displayed to the user.
      * @throws InvalidTaskException If the event task input format is invalid.
      */
-
     private String addEventTask(String input) throws InvalidTaskException {
         String[] parts = input.split(" /from ");
         if (parts.length != 2) {
@@ -187,7 +192,7 @@ public class Parser {
                 + taskList.getTaskByIndex(taskList.getSize() - 1);
     }
     
-    /*
+    /**
      * Lists all tasks in the task list.
      * @return The response to be displayed to the user.
      */
@@ -202,7 +207,7 @@ public class Parser {
         return sb.toString();
     }
 
-    /*
+    /**
      * Finds tasks that match a keyword.
      * @param input The user's input command.
      * @return The response to be displayed to the user.
@@ -229,7 +234,7 @@ public class Parser {
         return sb.toString();
     }
 
-    /*
+    /**
      * Marks or unmarks a task as complete.
      * @param input The user's input command.
      * @param mark True to mark as complete, false to mark as incomplete.
@@ -250,12 +255,12 @@ public class Parser {
         }
     }
 
-    /*
+    /**
      * Deletes a task from the task list.
      * @param input The user's input command.
      * @return The response to be displayed to the user.
      * @throws InvalidTaskException If the task number is invalid.
-      */
+     */
     private String deleteTask(String input) throws InvalidTaskException {
         int index = extractIndex(input);
 
@@ -265,6 +270,12 @@ public class Parser {
         return "Noted. I've removed this task:\n  " + removed;
     }
 
+    /**
+     * Gets the schedule of tasks for a specific date.
+     * @param input The user's input command.
+     * @return The response to be displayed to the user.
+     * @throws InvalidTaskException If the date format is invalid or no date is provided.
+     */
     private String getSchedule(String input) throws InvalidTaskException {
         
         String[] parts = input.trim().split("\\s+");
@@ -300,6 +311,13 @@ public class Parser {
         return sb.toString();
     }
 
+
+    /**
+     * Parses a date string into a LocalDate object using multiple formats.
+     * @param input The date string to parse.
+     * @return The parsed LocalDate object.
+     * @throws InvalidTaskException If the date format is invalid.
+     */
     private LocalDate parseFlexibleDate(String input) throws InvalidTaskException {
 
         DateTimeFormatter[] formats = new DateTimeFormatter[] {
