@@ -7,6 +7,11 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+/**
+ * Test class for the Event task type in the Koala application.
+ * Used ChatGPT to generate test cases based on the Event class's functionality and expected behavior.
+ */
 class EventTest {
 
     @Test

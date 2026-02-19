@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/**
+ * Test class for the Parser component of the Koala application.
+ * Used ChatGPT to generate test cases based on the Parser's functionality and expected behavior.
+ */
 class ParserTest {
 
     private Parser parser;
