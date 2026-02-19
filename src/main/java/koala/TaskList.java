@@ -13,6 +13,8 @@ public class TaskList {
 
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
+
+        assert tasks != null : "Tasks list should not be null";
     }
 
     public ArrayList<Task> getTasks() {

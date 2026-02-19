@@ -15,6 +15,8 @@ public class Todo extends Task {
      */
     public Todo(String description) throws InvalidTaskException {
         super(description);
+
+        assert description != null : "Task description should not be null";
     }
 
     @Override

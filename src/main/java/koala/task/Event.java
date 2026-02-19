@@ -40,6 +40,10 @@ public class Event extends Task {
         super(description);
         this.from = parseDate(from);
         this.to = parseDate(to);
+
+        assert description != null : "Task description should not be null";
+        assert from != null : "Start date should not be null";
+        assert to != null : "End date should not be null";
     }
 
     /*

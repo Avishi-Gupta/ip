@@ -306,7 +306,7 @@ public class Parser {
             }
         }
         if (!found) {   
-            return "No tasks scheduled for " + date + ".";
+            return "No tasks scheduled for " + date.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ".";
         }
         return sb.toString();
     }

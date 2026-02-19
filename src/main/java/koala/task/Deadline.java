@@ -37,6 +37,9 @@ public class Deadline extends Task {
     public Deadline(String description, String due) throws InvalidTaskException {
         super(description);
         this.due = parseDate(due);
+
+        assert description != null : "Task description should not be null";
+        assert due != null : "Due date should not be null";
     }
 
     /*
