@@ -6,8 +6,6 @@ Koala is a command-line task manager for tracking todos, deadlines and events.
 
 ## 1. General Command Structure
 
-<command> [arguments]
-
 Commands: todo, deadline, event, list, mark, unmark, delete, find, schedule, help, bye
 
 ---
