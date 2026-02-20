@@ -1,4 +1,4 @@
-# **Koala Task Manager – GMFD Quick Reference**
+# **Koala Task Manager**
 
 | **Command** | **Syntax** | **Example** | **Output** |
 |-------------|------------|-------------|------------|
