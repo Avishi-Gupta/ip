@@ -1,7 +1,6 @@
 # Koala Task Manager 
 
-Koala is a command-line task manager for tracking todos, deadlines, and events.  
-All commands are **case-sensitive**. Dates and times can be entered in multiple formats.
+Koala is a command-line task manager for tracking todos, deadlines and events.  
 
 ---
 
