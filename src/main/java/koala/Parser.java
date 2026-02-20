@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import koala.task.Deadline;
 import koala.task.Event;
@@ -99,7 +98,22 @@ public class Parser {
             return getSchedule(trimmedInput);
         }
 
-        throw new InvalidTaskException("I'm sorry, but I don't know what that means.");
+        if (trimmedInput.equals("help")) {
+            return "Available commands:\n"
+                    + "1. list - List all tasks\n"
+                    + "2. todo <description> - Add a todo task\n"
+                    + "3. deadline <description> /by <time> - Add a deadline task\n"
+                    + "4. event <description> /from <start> /to <end> - Add an event task\n"
+                    + "5. mark <task number> - Mark a task as complete\n"
+                    + "6. unmark <task number> - Mark a task as incomplete\n"
+                    + "7. delete <task number> - Delete a task\n"
+                    + "8. find <keyword> - Find tasks containing the keyword\n"
+                    + "9. schedule <date> - View tasks scheduled for a specific date\n"
+                    + "10. bye - Exit the application";
+        }
+
+        throw new InvalidTaskException("I'm sorry, but I don't know what that means.\n Please enter a valid command.\n "
+                                        + "Type 'help' for a list of available commands.");
     }
 
     public boolean isExitCommand(String input) {
@@ -113,14 +127,15 @@ public class Parser {
         String[] parts = input.split(" ");
 
         if (parts.length < 2) {
-            throw new InvalidTaskException("Please provide a task number.");
+            throw new InvalidTaskException("I am already tired. Don't make my life more difficult!\n"
+                                            + "Please provide a task number.");
         }
 
         try {
             int index = Integer.parseInt(parts[1]) - 1;
 
             if (index < 0 || index >= taskList.getSize()) {
-                throw new InvalidTaskException("Invalid task number.");
+                throw new InvalidTaskException("Honey, do you not know how to count? It's an invalid task number.");
             }
 
             return index;
@@ -138,7 +153,7 @@ public class Parser {
     private String addTodoTask(String input) throws InvalidTaskException {
         String description = input.substring(4).trim();
         if (description.isEmpty()) {
-            throw new InvalidTaskException("The description of a todo cannot be empty.");
+            throw new InvalidTaskException("Are you planning to do invisible tasks?\nThe description of a todo cannot be empty!");
         }
 
         taskList.addTask(new Todo(description));
@@ -155,7 +170,8 @@ public class Parser {
     private String addDeadlineTask(String input) throws InvalidTaskException {
         String[] parts = input.split(" /by ");
         if (parts.length != 2) {
-            throw new InvalidTaskException("Invalid deadline format. Use: deadline <desc> /by <time>");
+            throw new InvalidTaskException("Invalid deadline format\nOkay this one not your fault. I'm lazy and I only work with specific commands.\n"
+                                           + "Use: deadline <desc> /by <time>");
         }
 
         String description = parts[0].substring(8).trim();
@@ -175,12 +191,14 @@ public class Parser {
     private String addEventTask(String input) throws InvalidTaskException {
         String[] parts = input.split(" /from ");
         if (parts.length != 2) {
-            throw new InvalidTaskException("Invalid event format. Use: event <desc> /from <start> /to <end>");
+            throw new InvalidTaskException("Invalid event format\nOkay, not your fault. I'm lazy and I only work with specific commands.\n"
+                                           + "Use: event <desc> /from <start> /to <end>");
         }
 
         String[] times = parts[1].split(" /to ");
         if (times.length != 2) {
-            throw new InvalidTaskException("Invalid event format. Use: event <desc> /from <start> /to <end>");
+            throw new InvalidTaskException("Invalid event format\nOkay, not your fault. I'm lazy and I only work with specific commands.\n"
+                                           + "Use: event <desc> /from <start> /to <end>");
         }
 
         String description = parts[0].substring(5).trim();
@@ -197,7 +215,10 @@ public class Parser {
      * @return The response to be displayed to the user.
      */
     private String listTasks() {
-        StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
+        if (taskList.getSize() == 0) {
+            return "Your task list is empty. Seriously, don't be lazy like me try adding some tasks to your list.";
+        }
+        StringBuilder sb = new StringBuilder("Here are the tasks in your list:\nNice! You have work to do! Meanwhile, I'm just gonna sleep and eat LOL\n");
         for (int i = 0; i < taskList.getSize(); i++) {
             sb.append(i + 1)
               .append(". ")
@@ -216,7 +237,8 @@ public class Parser {
     private String findTasks(String input) throws InvalidTaskException {
         String keyword = input.substring(4).trim();
         if (keyword.isEmpty()) {
-            throw new InvalidTaskException("Please provide a keyword to search for.");
+            throw new InvalidTaskException("I am already tired. Don't make my life more difficult!\n"
+                                           + "Please provide a keyword to search for.");
         }
 
         ArrayList<Task> matches = taskList.findTasks(keyword);
@@ -248,10 +270,10 @@ public class Parser {
 
         if (mark) {
             task.markAsComplete();
-            return "Nice! I've marked this task as done:\n  " + task;
+            return "Good job on finishing this task! I aspire to be like you but I'd rather sleep.\n" + task;
         } else {
             task.markAsIncomplete();
-            return "Ok! I've marked this task as not done:\n  " + task;
+            return "ahh! what happened? did you think you will do it and then backed out?\nI've marked this task as not done:\n" + task;
         }
     }
 
@@ -267,7 +289,7 @@ public class Parser {
         Task removed = taskList.getTaskByIndex(index);
         taskList.deleteTask(index);
 
-        return "Noted. I've removed this task:\n  " + removed;
+        return "Nice! Less work. More sleep! I've removed this task:\n" + removed;
     }
 
     /**
@@ -281,7 +303,8 @@ public class Parser {
         String[] parts = input.trim().split("\\s+");
 
         if (parts.length < 2) {
-            throw new InvalidTaskException("Please provide a date to view the schedule for.");
+            throw new InvalidTaskException("I am already tired. Don't make my life more difficult!\n"
+                                           + "Please provide a date to view the schedule for.");
         }
 
         LocalDate date;
@@ -289,7 +312,7 @@ public class Parser {
         try {
             date = parseFlexibleDate(parts[1].trim());
         } catch (Exception e) {
-            throw new InvalidTaskException("Invalid date format. Try 20s26-02-18 or 18/02/2026.");
+            throw new InvalidTaskException("Invalid date format. Try 2026-02-18 or 18/02/2026. See I give you options but still you choose to be difficult :((");
         }
        
         boolean found = false;
@@ -324,7 +347,6 @@ public class Parser {
             DateTimeFormatter.ISO_LOCAL_DATE,
             DateTimeFormatter.ofPattern("dd-MM-yyyy"),
             DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-            DateTimeFormatter.ofPattern("yyyy MM dd"),
         };
 
         for (DateTimeFormatter formatter : formats) {

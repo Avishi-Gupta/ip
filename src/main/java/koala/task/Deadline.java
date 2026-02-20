@@ -62,7 +62,9 @@ public class Deadline extends Task {
                 // try next
             }
         }
-        throw new InvalidTaskException("Invalid date format");
+        throw new InvalidTaskException("Invalid date format. Try formats like 2026-02-18, 18/02/2026 or Mar 18 2026.\n"
+                                        + "If you need to add time, then try 2026-02-18 12:00, 18/02/2026 23:59 or Mar 18 2026 13:00.\n"
+                                        + "See I give you options but still you choose to be difficult :((");
     }
 
     /* 
