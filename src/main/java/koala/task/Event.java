@@ -41,6 +41,10 @@ public class Event extends Task {
         this.from = parseDate(from);
         this.to = parseDate(to);
 
+        if (this.from.isAfter(this.to)) {
+            throw new InvalidTaskException("Are you delusional? 'from' date/time must be before 'to' date/time!");
+        }
+
         assert description != null : "Task description should not be null";
         assert from != null : "Start date should not be null";
         assert to != null : "End date should not be null";

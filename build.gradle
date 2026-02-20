@@ -55,8 +55,20 @@ application {
 shadowJar {
     archiveBaseName = "koala"
     archiveClassifier = null
+    from(sourceSets.main.resources) {
+        include '**/*'
+    }
 }
 
 run{
     standardInput = System.in
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = ['src/main/resources']
+            include '**/*'
+        }
+    }
 }

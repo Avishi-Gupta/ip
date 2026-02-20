@@ -1,7 +1,5 @@
 package koala;
 
-import java.nio.file.WatchEvent;
-
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -27,12 +25,14 @@ public class MainWindow extends AnchorPane {
 
     private Koala koala;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.jpg"));
-    private Image koalaImage = new Image(this.getClass().getResourceAsStream("/images/DaKoala.jpg"));
+    private Image userImage;
+    private Image koalaImage;
 
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.jpg"));
+        koalaImage = new Image(this.getClass().getResourceAsStream("/images/DaKoala.jpg"));
     }
 
     /** Injects the Koala instance */

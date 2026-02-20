@@ -28,10 +28,10 @@ public class DialogBox extends HBox {
         assert text != null : "Dialog text should not be null";
         assert img != null : "Dialog image should not be null";
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setController(this);
             fxmlLoader.setRoot(this);
-            fxmlLoader.load();
+            fxmlLoader.load(getClass().getResourceAsStream("/view/DialogBox.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
