@@ -22,11 +22,14 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+            stage.setTitle("Koala Task Manager");
             scene.getStylesheets().addAll(
                 getClass().getResource("/css/main.css").toExternalForm(),
                 getClass().getResource("/css/dialog-box.css").toExternalForm()
             );
 
+            stage.setMinHeight(220);
+            stage.setMinWidth(417);
             fxmlLoader.<MainWindow>getController().setKoala(koala);  // inject the Koala instance
             stage.show();
         } catch (IOException e) {

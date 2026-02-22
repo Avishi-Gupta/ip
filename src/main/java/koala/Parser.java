@@ -157,7 +157,7 @@ public class Parser {
         }
 
         taskList.addTask(new Todo(description));
-        return "Got it. I've added this task:\n  "
+        return "Got it. I've added this task:\n"
                 + taskList.getTaskByIndex(taskList.getSize() - 1);
     }
 
@@ -170,7 +170,7 @@ public class Parser {
     private String addDeadlineTask(String input) throws InvalidTaskException {
         String[] parts = input.split(" /by ");
         if (parts.length != 2) {
-            throw new InvalidTaskException("Invalid deadline format\nOkay this one not your fault. I'm lazy and I only work with specific commands.\n"
+            throw new InvalidTaskException("Invalid deadline format\nOkay, not your fault. I'm lazy and I only work with specific commands.\n"
                                            + "Use: deadline <desc> /by <time>");
         }
 
@@ -178,7 +178,7 @@ public class Parser {
         String by = parts[1].trim();
 
         taskList.addTask(new Deadline(description, by));
-        return "Got it. I've added this task:\n  "
+        return "Got it. I've added this task:\n"
                 + taskList.getTaskByIndex(taskList.getSize() - 1);
     }
 
@@ -206,7 +206,7 @@ public class Parser {
         String to = times[1].trim();
 
         taskList.addTask(new Event(description, from, to));
-        return "Got it. I've added this task:\n  "
+        return "Got it. I've added this task:\n"
                 + taskList.getTaskByIndex(taskList.getSize() - 1);
     }
     
@@ -248,9 +248,7 @@ public class Parser {
 
         StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
         for (int i = 0; i < matches.size(); i++) {
-            sb.append(i + 1)
-              .append(". ")
-              .append(matches.get(i))
+            sb.append(matches.get(i))
               .append("\n");
         }
         return sb.toString();
@@ -312,7 +310,7 @@ public class Parser {
         try {
             date = parseFlexibleDate(parts[1].trim());
         } catch (Exception e) {
-            throw new InvalidTaskException("Invalid date format. Try 2026-02-18 or 18/02/2026. See I give you options but still you choose to be difficult :((");
+            throw new InvalidTaskException("Invalid date format. Try 2026-02-18 or 18/02/2026 or Feb 18 2026. See I give you options but still you choose to be difficult :((");
         }
        
         boolean found = false;
@@ -321,9 +319,7 @@ public class Parser {
         for (int i = 0; i < taskList.getSize(); i++) {
             Task task = taskList.getTaskByIndex(i);
             if (task.isScheduledFor(date)) {
-                sb.append(i + 1)
-                  .append(". ")
-                  .append(task)
+                sb.append(task)
                   .append("\n");
                 found = true;
             }
@@ -344,9 +340,9 @@ public class Parser {
     private LocalDate parseFlexibleDate(String input) throws InvalidTaskException {
 
         DateTimeFormatter[] formats = new DateTimeFormatter[] {
-            DateTimeFormatter.ISO_LOCAL_DATE,
             DateTimeFormatter.ofPattern("dd-MM-yyyy"),
             DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+            DateTimeFormatter.ofPattern("MMM dd yyyy")
         };
 
         for (DateTimeFormatter formatter : formats) {
@@ -356,6 +352,6 @@ public class Parser {
             }
         }
 
-        throw new InvalidTaskException("Invalid date format. Try 2026-02-18 or 18/02/2026.");
+        throw new InvalidTaskException("Invalid date format. Try 2026-02-18 or 18/02/2026 or Feb 18 2026.");
     }
 }
